@@ -1,0 +1,1 @@
+tensorboard --logdir=D:\SSD-Tensorflow-nonmotor\ssd_eval_log
