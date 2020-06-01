@@ -670,3 +670,73 @@
 存储为csv后可实时更新
 
 ***
+
+*附：zookeeper及kafka安装教程*
+
+依次安装Java、zookeeper、kafka
+
+将安装包解压后复制到`/opt/apps/`目录下
+
+>添加环境变量
+
+`vi /etc/profile`
+
+	export JAVA_HOME=/opt/apps/jdk1.8.0_192
+	export PATH=$PATH:$JAVA_HOME/bin:$JAVA_HOME/jre/bin
+
+	export ZOOKEEPER_HOME=/opt/apps/zookeeper-3.4.5
+	export PATH=$PATH:$ZOOKEEPER_HOME/bin
+
+	export KAFKA_HOME=/opt/apps/kafka_2.11
+	export PATH=$PATH:$KAFKA_HOME/bin
+
+`source /etc/profile`
+
+>配置zookeeper
+
+进入zookeeper目录下conf文件夹
+
+`cp zoo_sample.cfg zoo.cfg`
+
+将数据目录改为：`dataDir=/opt/apps/zookeeper-3.4.5/zkData`
+
+并在zookeeper目录下新建zkData文件夹
+
+>启动zookeeper
+
+`cd /opt/apps/zookeeper-3.4.5`
+
+`bin/zkServer.sh start`
+
+输入`jps`查看是否启动成功
+
+出现`QuorumPeerMain`表示启动成功
+
+>配置kafka
+
+修改Kafka的配置文件`server.properties`
+
+	# broker的编号，如果集群中有多个broker,则每个broker的编号要设置的不同
+	broker.id=0
+	# 对外提供的服务入口地址
+	listeners=PLAINTEXT://localhost:9092
+	# 存放消息的日志文件
+	log.dirs=/data/kafka-logs/
+	# kafka所需要的Zookeeper集群地址
+	zookeeper.connect=localhost:2181
+
+>启动kafka
+
+`bin/kafka-server-start.sh config/server.properties`
+
+>创建一个topic
+
+`bin/kafka-topics.sh --zookeeper localhost:2181 --create --topic test --replication-factor 1 --partitions 1`
+
+>删除一个topic
+
+`bin/kafka-topic.sh --delete --zookeeper localhost:2181 --topic test`
+
+>查看topic
+
+`bin/kafka-topics.sh --list --zookeeper localhost:2181`
